@@ -3,6 +3,8 @@
 In this lab you will work with
 streams, lists, and maps.
 
+The lab has 2 parts, pick *one*.
+
 ## Jumble Permutation Generator
 
 The traditional way to solve
@@ -41,18 +43,6 @@ information to pick the most common word in the
 generated list. Re-write the code so `solve()`
 returns a string and `main()` prints it out.
 
-## Switch Roles
-
-This is a good time for the pilot
-and navigator to switch roles.
-
-Or, have one partner pilot the writing of the
-method described in "Common Elements" below,
-while the other partner works on writing
-code to use the method. Make sure you
-agree on what the function signature will be
-(what its name is and what kind of argument it
-should take: clearly, it should return a `String`).
 
 ## Lab Assignment: Part 2 - Spelling Corrector
 
@@ -88,7 +78,3 @@ order of lowest to highest frequency.
 pick the last item on the list.
 * or, you could do a linear search to simply find the
 `WordFrequency` object with the maximum frequency.
-
-You **could** write a method that given something like a
-`Stream<WordFreqency>` or a `List<WordFreqency>` returns
-the word with the highest frequency and uses it for both.
