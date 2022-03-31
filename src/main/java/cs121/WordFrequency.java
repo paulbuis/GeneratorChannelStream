@@ -25,9 +25,9 @@ public class WordFrequency implements Comparable<WordFrequency>{
         }
 
         if (frequency < otherWF.frequency) {
-            return -1;
+            return 1;
         }
 
-        return 1;
+        return -1;
     }
 }
