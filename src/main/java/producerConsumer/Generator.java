@@ -1,41 +1,55 @@
 package producerConsumer;
 
 import java.util.Iterator;
+
 import java.util.stream.Stream;
+
 import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.BinaryOperator;
+import java.util.function.Predicate;
 
 import java.io.Closeable;
 
 public abstract class Generator<T> implements Iterable<T>, Closeable {
-    private final Channel<T> channel = new Channel<>();
-    private final Thread thread = new Thread(new Runner());
+    private final Channel<T> channel;
 
     public Generator() {
-        thread.start();
+        this(0);
+    }
+
+    public Generator(int channelCapacity) {
+        channel = new Channel<>(channelCapacity);
     }
 
     @Override
     public final Iterator<T> iterator() {
+        Thread thread = new Thread(new Runner());
+        thread.start();
         return channel.iterator();
     }
 
     public final Stream<T> stream() {
+        Thread thread = new Thread(new Runner());
+        thread.start();
         return channel.stream();
     }
 
-    public final Stream<T> filter(java.util.function.Predicate<T> predicate) {
+    public final Stream<T> filter(Predicate<T> predicate) {
         return stream().filter(predicate);
     }
 
-    public final <R> Stream<R> map(java.util.function.Function<T,R> transform) {
+    public final <R> Stream<R> map(Function<T,R> transform) {
         return stream().map(transform);
+    }
+
+    public final T reduce(T identity, BinaryOperator<T> combiner){
+        return stream().reduce(identity, combiner);
     }
 
     @Override
     public final void close() {
-        if (!channel.closed) {
-            channel.close();
-        }
+        channel.close();
     }
 
     public abstract void produce(Consumer<T> consumer);
@@ -47,7 +61,7 @@ public abstract class Generator<T> implements Iterable<T>, Closeable {
                 System.err.println("Generator channel already closed");
                 return;
             }
-            Generator.this.produce(new ChannelConsumer());
+            produce(new ChannelConsumer());
             close();
         }
     }
@@ -56,7 +70,7 @@ public abstract class Generator<T> implements Iterable<T>, Closeable {
 
         @Override
         public void accept(T item) {
-            Generator.this.channel.send(item);
+            channel.send(item);
         }
     }
 }

@@ -22,7 +22,7 @@ public final class Range extends Generator<Integer> {
 
     @Override
     public void produce(Consumer<Integer> consumer) {
-        for(int i=0; i<maxRange; i++) {
+        for(int i=minRange; i<maxRange; i++) {
             consumer.accept(i);
         }
     }

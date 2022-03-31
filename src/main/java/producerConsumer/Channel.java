@@ -2,6 +2,7 @@ package producerConsumer;
 
 import java.io.Closeable;
 
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.BlockingQueue;
 
@@ -14,8 +15,21 @@ import java.util.Spliterator;
 
 public class Channel<T> implements Closeable, Iterable<T> {
 
-    private final BlockingQueue<IterationResult<T>> queue = new SynchronousQueue<>();
-    boolean closed = false;
+    private final BlockingQueue<IterationResult<T>> queue;
+    boolean closed = false; // also accessed in Generator.run()
+
+    public Channel() {
+        this(0);
+    }
+
+    public Channel(int capacity) {
+        if (capacity < 1) {
+            queue = new SynchronousQueue<>();
+        } else {
+            queue = new ArrayBlockingQueue<>(capacity);
+        }
+    }
+
 
     public void send(T item) {
         if (closed) {
